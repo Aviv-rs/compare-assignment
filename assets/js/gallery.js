@@ -37,11 +37,24 @@ document.addEventListener('DOMContentLoaded', () => {
         const container = document.createElement('div');
         container.classList.add('ca-gallery-container');
 
+        const spinner = document.createElement('div');
+        spinner.classList.add('ca-gallery-spinner');
+        container.appendChild(spinner);
+
+        let loaded = 0;
         displayImages.forEach((src) => {
             const img = document.createElement('img');
-            img.src = src;
             img.alt = 'Product image';
             img.classList.add('ca-gallery-image');
+            img.addEventListener('load', () => {
+                img.classList.add('ca-gallery-image--loaded');
+                if (++loaded === displayImages.length) spinner.remove();
+            });
+            img.addEventListener('error', () => {
+                img.remove();
+                if (++loaded === displayImages.length) spinner.remove();
+            });
+            img.src = src;
             container.appendChild(img);
         });
 
